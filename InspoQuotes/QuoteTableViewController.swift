@@ -10,7 +10,7 @@ import UIKit
 import StoreKit
 
 class QuoteTableViewController: UITableViewController, SKPaymentTransactionObserver {
-
+    
     let productID = "com.londonappbrewery.InspoQuotes.PremiumQuotes"
     
     var quotesToShow = [
@@ -30,31 +30,31 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
         "Your true success in life begins only when you make the commitment to become excellent at what you do. — Brian Tracy",
         "Believe in yourself, take on your challenges, dig deep within yourself to conquer fears. Never let anyone bring you down. You got to keep going. – Chantal Sutherland"
     ]
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         SKPaymentQueue.default().add(self)
-
+        
         if isPurchased() {
             showPremiumQuotes()
         }
     }
-
+    
     // MARK: - Table view data source
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isPurchased() {
             return quotesToShow.count
         } else {
-        return quotesToShow.count + 1
+            return quotesToShow.count + 1
         }
     }
-
- 
+    
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "QuoteCell", for: indexPath)
-
+        
         if indexPath.row < quotesToShow.count{
             cell.textLabel?.text = quotesToShow[indexPath.row]
             cell.textLabel?.numberOfLines = 0
@@ -65,11 +65,11 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
             cell.textLabel?.textColor = #colorLiteral(red: 0.1568627451, green: 0.6666666667, blue: 0.7529411765, alpha: 1)
             cell.accessoryType = .disclosureIndicator
         }
-
+        
         return cell
     }
-   
-
+    
+    
     // MARK: - Table view delegate methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -87,7 +87,7 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
         if SKPaymentQueue.canMakePayments() {
             //Can make payments
             
-           let paymentRequest = SKMutablePayment()
+            let paymentRequest = SKMutablePayment()
             paymentRequest.productIdentifier = productID
             SKPaymentQueue.default().add(paymentRequest)
             
@@ -108,20 +108,20 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
                 
                 showPremiumQuotes()
                 
-               
+                
                 
                 SKPaymentQueue.default().finishTransaction(transaction)
                 
             } else if transaction.transactionState == .failed {
                 
                 //Payment failed
-
+                
                 if let error = transaction.error {
                     let errorDescription = error.localizedDescription
                     print("Transaction failed due to error: \(errorDescription)")
                 }
                 
-                 SKPaymentQueue.default().finishTransaction(transaction)
+                SKPaymentQueue.default().finishTransaction(transaction)
                 
             } else if transaction.transactionState == .restored {
                 
@@ -163,5 +163,5 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
         SKPaymentQueue.default().restoreCompletedTransactions()
     }
     
-
+    
 }
